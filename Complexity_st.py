@@ -39,11 +39,11 @@ problemsTot=create_experiments()
 path = pathlib.Path(__file__).parents[0]
 # path = r"/Users/ricardobortothopker/OneDrive - Massachusetts Institute of Technology/Classes/Thesis/excels/Points for TSP/"
 file = r"TSP Problems3.pkl"
-url = path+file
+url = path / file
 with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
     xyArrDict = pickle.load(f)
 if 'current_test' not in st.session_state:
-    url2 = path+r'current_test_number.csv'
+    url2 = path / 'current_test_number.csv'
     cur_test_num = pd.read_csv(url2)
     cur_test_num = int(cur_test_num.columns[0])
     if cur_test_num>=len(problemsTot):
@@ -219,7 +219,7 @@ if valid_path(st.session_state['path']):
         # st.markdown(path_to_point(st.session_state['path']))
         st.session_state['last_point'] = []
         selected_points =[]
-        url_results = path+'results_streamlit.csv'
+        url_results = path / 'results_streamlit.csv'
         streamlit_csv = pd.read_csv(url_results)
         df_temp = pd.DataFrame([{'test id': test_id,
                                  'path':path_to_point(st.session_state['path']),
