@@ -2,8 +2,4 @@ streamlit
 numpy
 plotly
 pandas
-datetime
-random
-string
-pathlib
 streamlit_plotly_events == 0.0.6
