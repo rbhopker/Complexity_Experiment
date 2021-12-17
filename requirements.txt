@@ -3,7 +3,6 @@ numpy
 plotly
 pandas
 datetime
-pickle
 random
 string
 pathlib
