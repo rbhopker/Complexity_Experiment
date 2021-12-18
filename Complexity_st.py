@@ -288,7 +288,7 @@ if valid_path(st.session_state['path']):
         result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
         values = result.get('values',[])
         streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
-        st.write(streamlit_csv)
+        # st.write(streamlit_csv)
         
         
         df_temp = pd.DataFrame([{'test_id': test_id,
@@ -297,9 +297,9 @@ if valid_path(st.session_state['path']):
                                  'Session_id': st.session_state['session_id'],
                                  'Finish_time':st.session_state['finished']}])
         st.session_state['path'] = {'x':[],'y':[]}
-        st.write(df_temp)
+        # st.write(df_temp)
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
-        st.write(streamlit_csv)
+        # st.write(streamlit_csv)
         streamlit_csv_as_list = streamlit_csv.values.tolist()
         streamlit_csv_as_list.insert(0,streamlit_csv.columns.tolist())
         dict_write = {'values':streamlit_csv_as_list}
