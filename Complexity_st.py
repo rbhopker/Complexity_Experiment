@@ -269,8 +269,8 @@ if valid_path(st.session_state['path']):
         st.session_state['count'] += 1
         st.session_state['last_point'] = []
         selected_points =[]
-        url_results = path / 'results_streamlit.csv'
-        streamlit_csv = pd.read_csv(url_results)
+        # url_results = path / 'results_streamlit.csv'
+        # streamlit_csv = pd.read_csv(url_results)
         
         result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
         values_counter = result_counter.get('values',[])
@@ -279,17 +279,19 @@ if valid_path(st.session_state['path']):
         last_row = df1.iloc[2][0]
         result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
         values = result.get('values',[])
-        streamlit_csv = pd.DataFrame(values)
+        streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
         # st.write(df0)
         
         
-        df_temp = pd.DataFrame([{'test id': test_id,
+        df_temp = pd.DataFrame([{'test_id': test_id,
                                  'path':path_to_point(st.session_state['path']),
-                                 'time (s)':st.session_state['finished'] - st.session_state['start_time'],
-                                 'Session id': st.session_state['session_id'],
-                                 'Finish time':st.session_state['finished']}])
+                                 'duration':st.session_state['finished'] - st.session_state['start_time'],
+                                 'Session_id': st.session_state['session_id'],
+                                 'Finish_time':st.session_state['finished']}])
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
+        st.write(streamlit_csv)
         streamlit_csv_as_list = streamlit_csv.values.tolist()
+        streamlit_csv_as_list.insert(0,streamlit_csv.columns.tolist())
         dict_write = {'values':streamlit_csv_as_list}
         request = sheet.values().update(spreadsheetId=Sheet0,
                                         range="results_streamlit!A1",
@@ -297,7 +299,7 @@ if valid_path(st.session_state['path']):
                                         body=dict_write).execute()
         
         
-        streamlit_csv.to_csv(url_results,index=False)
+        # streamlit_csv.to_csv(url_results,index=False)
         st.session_state['path'] = {'x':[],'y':[]}
         st.experimental_rerun()
 
