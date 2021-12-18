@@ -98,7 +98,7 @@ if 'current_test' not in st.session_state:
     result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
     values_counter = result_counter.get('values',[])
     df1 = pd.DataFrame(values_counter)
-    cur_test_num = df1.iloc[1][0]
+    cur_test_num = int(df1.iloc[1][0])
 
     # url2 = path / 'current_test_number.csv'
     # cur_test_num = pd.read_csv(url2)
