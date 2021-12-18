@@ -42,7 +42,7 @@ rows = run_query(f'SELECT * FROM "{sheet_url}"')
 print(rows)
 st.markdown(rows)
 df = pd.DataFrame(rows.fetchall())
-df.columns = rows.keys()
+# df.columns = rows.keys()
 st.write(df)
 # Print results.
 for row in rows:
