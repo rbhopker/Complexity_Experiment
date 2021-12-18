@@ -33,7 +33,6 @@ conn = connect(credentials=credentials)
 
 # Perform SQL query on the Google Sheet.
 # Uses st.cache to only rerun when the query changes or after 10 min.
-@st.cache(ttl=600)
 def run_query(query):
     rows = conn.execute(query,headers=0)
     return rows
