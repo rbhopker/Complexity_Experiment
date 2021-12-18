@@ -20,6 +20,7 @@ import string
 import pathlib
 
 from google.oauth2 import service_account
+from googleapiclient.discovery import build
 from gsheetsdb import connect
 
 # Create a connection object.
@@ -44,7 +45,13 @@ count_url = st.secrets["private_counter"]
 df2 = run_query(f'SELECT * FROM "{count_url}"')
 st.write(df)
 st.write(df2)
-
+Sheet0 = st.secrets["Sheet0"]
+Sheet1 = st.secrets["Sheet1"]
+service = build('sheets','v4',credentials=credentials)
+sheet = service.spreadsheets()
+result = sheet.values().get(spreadsheetId=Sheet0).execute
+values = result.get('values',[])
+st.write(values)
 
 
 

@@ -4,3 +4,4 @@ plotly
 pandas
 streamlit_plotly_events == 0.0.6
 gsheetsdb
+google-api-python-client
