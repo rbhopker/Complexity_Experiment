@@ -34,28 +34,28 @@ conn = connect(credentials=credentials)
 
 # Perform SQL query on the Google Sheet.
 # Uses st.cache to only rerun when the query changes or after 10 min.
-def run_query(query):
-    rows = conn.execute(query,headers=1)
-    df = pd.DataFrame(rows.fetchall())
-    return df
+# def run_query(query):
+#     rows = conn.execute(query,headers=1)
+#     df = pd.DataFrame(rows.fetchall())
+#     return df
 
-sheet_url = st.secrets["private_gsheets_url"]
-df = run_query(f'SELECT * FROM "{sheet_url}"')
-count_url = st.secrets["private_counter"]
-df2 = run_query(f'SELECT * FROM "{count_url}"')
-st.write(df)
-st.write(df2)
-Sheet0 = st.secrets["Sheet0"]
-Sheet1 = st.secrets["Sheet1"]
+# sheet_url = st.secrets["private_gsheets_url"]
+# df = run_query(f'SELECT * FROM "{sheet_url}"')
+# count_url = st.secrets["private_counter"]
+# df2 = run_query(f'SELECT * FROM "{count_url}"')
+# st.write(df)
+# st.write(df2)
+
 service = build('sheets','v4',credentials=credentials)
 sheet = service.spreadsheets()
-
+Sheet0 = st.secrets["Sheet0"]
+Sheet1 = st.secrets["Sheet1"]
 result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
 values_counter = result_counter.get('values',[])
 df1 = pd.DataFrame(values_counter)
 st.write(df1)
-
-result = sheet.values().get(spreadsheetId=Sheet0,range="results_streamlit!A1:E2").execute()
+last_row = df1.iloc[1]
+result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
 values = result.get('values',[])
 df0 = pd.DataFrame(values)
 st.write(df0)
