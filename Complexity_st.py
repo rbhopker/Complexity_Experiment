@@ -288,6 +288,7 @@ if valid_path(st.session_state['path']):
                                  'duration':st.session_state['finished'] - st.session_state['start_time'],
                                  'Session_id': st.session_state['session_id'],
                                  'Finish_time':st.session_state['finished']}])
+        st.write(df_temp)
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
         st.write(streamlit_csv)
         streamlit_csv_as_list = streamlit_csv.values.tolist()
