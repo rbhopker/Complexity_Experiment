@@ -50,7 +50,7 @@ Sheet1 = st.secrets["Sheet1"]
 service = build('sheets','v4',credentials=credentials)
 sheet = service.spreadsheets()
 
-result_counter = sheet.values().get(spreadsheetId=Sheet0,range="current_test_number!A1:A3").execute
+result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute
 values_counter = result_counter.get('values',[])
 st.write(values_counter)
 
