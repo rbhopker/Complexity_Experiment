@@ -46,7 +46,7 @@ values = result.get('values',[])
 df0 = pd.DataFrame(values)
 st.write(df0)
 
-df1.iloc[1][0] = df1.iloc[1][0]+1
+df1.iloc[1][0] = int(df1.iloc[1][0])+1
 request = heet.values().update(spreadsheetId=Sheet1,
                                range="current_test_number!A1",
                                valueInputOption='USER_ENTERist(ED', 
