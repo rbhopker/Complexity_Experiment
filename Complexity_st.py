@@ -47,16 +47,13 @@ df0 = pd.DataFrame(values)
 st.write(df0)
 
 
-df1.iloc[1][0] = int(df1.iloc[1][0])+1
-df_as_list = df1.values.tolist()
-st.write(df_as_list)
-dictt = {'values':df_as_list}
-st.write(dictt)
-request = sheet.values().update(spreadsheetId=Sheet1,
-                               range="current_test_number!A1",
-                               valueInputOption='USER_ENTERED', 
-                               body=dictt)
-request.execute()
+# df1.iloc[1][0] = int(df1.iloc[1][0])+1
+# df_as_list = df1.values.tolist()
+# dictt = {'values':df_as_list}
+# request = sheet.values().update(spreadsheetId=Sheet1,
+#                                range="current_test_number!A1",
+#                                valueInputOption='USER_ENTERED', 
+#                                body=dictt).execute()
 
 
 
@@ -98,15 +95,28 @@ url = path / file
 with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
     xyArrDict = pickle.load(f)
 if 'current_test' not in st.session_state:
-    url2 = path / 'current_test_number.csv'
-    cur_test_num = pd.read_csv(url2)
-    cur_test_num = int(cur_test_num.columns[0])
+    result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+    values_counter = result_counter.get('values',[])
+    df1 = pd.DataFrame(values_counter)
+    cur_test_num = df1.iloc[1][0]
+
+    # url2 = path / 'current_test_number.csv'
+    # cur_test_num = pd.read_csv(url2)
+    # cur_test_num = int(cur_test_num.columns[0])
     if cur_test_num>=len(problemsTot):
         cur_test_num=-1
     st.session_state['current_test'] = cur_test_num
-    next_test_num = pd.read_csv(url2)
-    next_test_num = next_test_num.rename(columns={f'{cur_test_num}':cur_test_num+1})
-    next_test_num.to_csv(url2,index=False)
+    df1.iloc[1][0] = int(df1.iloc[1][0])+1
+    df_as_list = df1.values.tolist()
+    dictt = {'values':df_as_list}
+    request = sheet.values().update(spreadsheetId=Sheet1,
+                                   range="current_test_number!A1",
+                                   valueInputOption='USER_ENTERED', 
+                                   body=dictt).execute()
+
+    # next_test_num = pd.read_csv(url2)
+    # next_test_num = next_test_num.rename(columns={f'{cur_test_num}':cur_test_num+1})
+    # next_test_num.to_csv(url2,index=False)
     cur_test_num = st.session_state['current_test']
     cur_test = problemsTot[cur_test_num,:].copy()
     shuffle(cur_test)
