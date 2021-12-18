@@ -289,13 +289,13 @@ if valid_path(st.session_state['path']):
         values = result.get('values',[])
         streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
         # st.write(streamlit_csv)
-        
+        duration = st.session_state['finished'] - st.session_state['start_time']
         
         df_temp = pd.DataFrame([{'test_id': test_id,
-                                 'path':path_to_point(st.session_state['path']),
-                                 'duration':st.session_state['finished'] - st.session_state['start_time'],
+                                 'path':str(path_to_point(st.session_state['path'])),
+                                 'duration':duration.total_seconds(),
                                  'Session_id': st.session_state['session_id'],
-                                 'Finish_time':st.session_state['finished']}])
+                                 'Finish_time':st.session_state['finished'].strftime("%Y/%m/%d, %H:%M:%S")}])
         st.session_state['path'] = {'x':[],'y':[]}
         # st.write(df_temp)
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
@@ -304,7 +304,7 @@ if valid_path(st.session_state['path']):
         streamlit_csv_as_list.insert(0,streamlit_csv.columns.tolist())
         
         dict_write = {'values':streamlit_csv_as_list}
-        print(streamlit_csv_as_list)
+        # print(streamlit_csv_as_list)
         st.markdown(streamlit_csv_as_list)
         request = sheet.values().update(spreadsheetId=Sheet0,
                                         range="results_streamlit!A1",
