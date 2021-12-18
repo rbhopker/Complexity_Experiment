@@ -54,7 +54,7 @@ result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_num
 values_counter = result_counter.get('values',[])
 df1 = pd.DataFrame(values_counter)
 st.write(df1)
-last_row = df1.iloc[1]
+last_row = df1.iloc[2]
 result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
 values = result.get('values',[])
 df0 = pd.DataFrame(values)
