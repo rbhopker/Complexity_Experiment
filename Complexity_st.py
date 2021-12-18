@@ -30,13 +30,7 @@ credentials = service_account.Credentials.from_service_account_info(
         "https://www.googleapis.com/auth/spreadsheets",
     ],
 )
-conn = connect(credentials=credentials)
 
-service = build('sheets','v4',credentials=credentials)
-sheet = service.spreadsheets()
-
-Sheet0 = st.secrets["Sheet0"]
-Sheet1 = st.secrets["Sheet1"]
 # result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
 # values_counter = result_counter.get('values',[])
 # df1 = pd.DataFrame(values_counter)
@@ -82,6 +76,13 @@ url = path / file
 with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
     xyArrDict = pickle.load(f)
 if 'current_test' not in st.session_state:
+    conn = connect(credentials=credentials)
+
+    service = build('sheets','v4',credentials=credentials)
+    sheet = service.spreadsheets()
+
+    Sheet0 = st.secrets["Sheet0"]
+    Sheet1 = st.secrets["Sheet1"]
     result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
     values_counter = result_counter.get('values',[])
     df1 = pd.DataFrame(values_counter)
@@ -265,13 +266,20 @@ if st.button(label='Clear all lines'):
 st.session_state['last_point'] = selected_point
 if valid_path(st.session_state['path']):
     if st.button(label='Next'):
+        
         st.session_state['finished'] = datetime.now()
         st.session_state['count'] += 1
         st.session_state['last_point'] = []
         selected_points =[]
         # url_results = path / 'results_streamlit.csv'
         # streamlit_csv = pd.read_csv(url_results)
-        
+        conn = connect(credentials=credentials)
+
+        service = build('sheets','v4',credentials=credentials)
+        sheet = service.spreadsheets()
+
+        Sheet0 = st.secrets["Sheet0"]
+        Sheet1 = st.secrets["Sheet1"]
         result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
         values_counter = result_counter.get('values',[])
         df1 = pd.DataFrame(values_counter)
