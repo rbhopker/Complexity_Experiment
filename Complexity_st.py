@@ -46,12 +46,16 @@ values = result.get('values',[])
 df0 = pd.DataFrame(values)
 st.write(df0)
 
+
 df1.iloc[1][0] = int(df1.iloc[1][0])+1
+df_as_list = df1.values.tolist()
+st.write(df_as_list)
+dictt = {'values':df_as_list}
+st.write(dictt)
 request = sheet.values().update(spreadsheetId=Sheet1,
                                range="current_test_number!A1",
-                               valueInputOption='USER_ENTERist(ED', 
-                               insertDataOption='', 
-                               body={'values':df1.values.tolist()})
+                               valueInputOption='USER_ENTERED', 
+                               body=dictt)
 request.execute()
 
 
