@@ -52,11 +52,13 @@ sheet = service.spreadsheets()
 
 result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
 values_counter = result_counter.get('values',[])
-st.write(values_counter)
+df1 = pd.DataFrame(values_counter)
+st.write(df1)
 
 result = sheet.values().get(spreadsheetId=Sheet0,range="results_streamlit!A1:E2").execute()
 values = result.get('values',[])
-st.write(values)
+df0 = pd.DataFrame(values)
+st.write(df0)
 
 
 
