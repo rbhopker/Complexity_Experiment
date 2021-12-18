@@ -52,8 +52,8 @@ Sheet0 = st.secrets["Sheet0"]
 Sheet1 = st.secrets["Sheet1"]
 result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
 values_counter = result_counter.get('values',[])
-df1 = pd.DataFrame(values_counter[1,:],column=values_counter[0])
-st.write(df1)
+# df1 = pd.DataFrame(values_counter[1,:],column=values_counter[0])
+# st.write(df1)
 df1 = pd.DataFrame(values_counter)
 st.write(df1)
 last_row = df1.iloc[2][0]
