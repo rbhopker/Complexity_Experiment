@@ -41,7 +41,9 @@ sheet_url = st.secrets["private_gsheets_url"]
 rows = run_query(f'SELECT * FROM "{sheet_url}"')
 print(rows)
 st.markdown(rows)
-st.write(pd.DataFrame(rows.fetchall()))
+df = pd.DataFrame(rows.fetchall())
+df.columns = rows.keys()
+st.write(df)
 # Print results.
 for row in rows:
     st.markdown(f"{row}")
