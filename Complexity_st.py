@@ -49,7 +49,12 @@ Sheet0 = st.secrets["Sheet0"]
 Sheet1 = st.secrets["Sheet1"]
 service = build('sheets','v4',credentials=credentials)
 sheet = service.spreadsheets()
-result = sheet.values().get(spreadsheetId=Sheet0).execute
+
+result_counter = sheet.values().get(spreadsheetId=Sheet0,range="current_test_number!A1:A3").execute
+values_counter = result_counter.get('values',[])
+st.write(values_counter)
+
+result = sheet.values().get(spreadsheetId=Sheet0,range="results_streamlit!A1:E2").execute
 values = result.get('values',[])
 st.write(values)
 
