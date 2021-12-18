@@ -35,18 +35,15 @@ conn = connect(credentials=credentials)
 # Uses st.cache to only rerun when the query changes or after 10 min.
 def run_query(query):
     rows = conn.execute(query,headers=1)
-    return rows
+    df = pd.DataFrame(rows.fetchall())
+    return df
 
 sheet_url = st.secrets["private_gsheets_url"]
-rows = run_query(f'SELECT * FROM "{sheet_url}"')
-print(rows)
-st.markdown(rows)
-df = pd.DataFrame(rows.fetchall())
-# df.columns = rows.keys()
+df = run_query(f'SELECT * FROM "{sheet_url}"')
+count_url = st.secrets["private_counter"]
+df2 = run_query(f'SELECT * FROM "{count_url}"')
 st.write(df)
-# Print results.
-for row in rows:
-    st.markdown(f"{row.test_id}")
+st.write(df2)
 
 
 
