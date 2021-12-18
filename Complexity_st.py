@@ -302,6 +302,6 @@ if valid_path(st.session_state['path']):
         
         
         # streamlit_csv.to_csv(url_results,index=False)
-        st.session_state['path'] = {'x':[],'y':[]}
+        # st.session_state['path'] = {'x':[],'y':[]}
         st.experimental_rerun()
 
