@@ -34,7 +34,7 @@ conn = connect(credentials=credentials)
 # Perform SQL query on the Google Sheet.
 # Uses st.cache to only rerun when the query changes or after 10 min.
 def run_query(query):
-    rows = conn.execute(query,headers=0)
+    rows = conn.execute(query,headers=1)
     return rows
 
 sheet_url = st.secrets["private_gsheets_url"]
@@ -46,7 +46,7 @@ df.columns = rows.keys()
 st.write(df)
 # Print results.
 for row in rows:
-    st.markdown(f"{row}")
+    st.markdown(f"{row.test_id}")
 
 
 
