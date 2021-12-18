@@ -34,6 +34,7 @@ conn = connect(credentials=credentials)
 
 service = build('sheets','v4',credentials=credentials)
 sheet = service.spreadsheets()
+
 Sheet0 = st.secrets["Sheet0"]
 Sheet1 = st.secrets["Sheet1"]
 result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
@@ -54,20 +55,6 @@ st.write(df0)
 #                                range="current_test_number!A1",
 #                                valueInputOption='USER_ENTERED', 
 #                                body=dictt).execute()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if 'session_id' not in st.session_state:
@@ -280,18 +267,36 @@ if valid_path(st.session_state['path']):
     if st.button(label='Next'):
         st.session_state['finished'] = datetime.now()
         st.session_state['count'] += 1
-        # st.write(st.session_state['finished'] - st.session_state['start_time'])
-        # st.markdown(path_to_point(st.session_state['path']))
         st.session_state['last_point'] = []
         selected_points =[]
         url_results = path / 'results_streamlit.csv'
         streamlit_csv = pd.read_csv(url_results)
+        
+        result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+        values_counter = result_counter.get('values',[])
+        df1 = pd.DataFrame(values_counter)
+        # st.write(df1)
+        last_row = df1.iloc[2][0]
+        result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
+        values = result.get('values',[])
+        streamlit_csv = pd.DataFrame(values)
+        # st.write(df0)
+        
+        
         df_temp = pd.DataFrame([{'test id': test_id,
                                  'path':path_to_point(st.session_state['path']),
                                  'time (s)':st.session_state['finished'] - st.session_state['start_time'],
                                  'Session id': st.session_state['session_id'],
                                  'Finish time':st.session_state['finished']}])
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
+        streamlit_csv_as_list = streamlit_csv.values.tolist()
+        dict_write = {'values':streamlit_csv_as_list}
+        request = sheet.values().update(spreadsheetId=Sheet0,
+                                        range="results_streamlit!A1",
+                                        valueInputOption='USER_ENTERED', 
+                                        body=dict_write).execute()
+        
+        
         streamlit_csv.to_csv(url_results,index=False)
         st.session_state['path'] = {'x':[],'y':[]}
         st.experimental_rerun()
