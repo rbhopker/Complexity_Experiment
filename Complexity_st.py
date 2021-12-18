@@ -280,7 +280,7 @@ if valid_path(st.session_state['path']):
         result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
         values = result.get('values',[])
         streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
-        # st.write(df0)
+        st.write(streamlit_csv)
         
         
         df_temp = pd.DataFrame([{'test_id': test_id,
