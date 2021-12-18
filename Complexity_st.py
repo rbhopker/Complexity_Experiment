@@ -51,12 +51,12 @@ service = build('sheets','v4',credentials=credentials)
 sheet = service.spreadsheets()
 
 result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
-# values_counter = result_counter.get('values',[])
-st.write(result_counter)
+values_counter = result_counter.get('values',[])
+st.write(values_counter)
 
 result = sheet.values().get(spreadsheetId=Sheet0,range="results_streamlit!A1:E2").execute()
-# values = result.get('values',[])
-st.write(result)
+values = result.get('values',[])
+st.write(values)
 
 
 
