@@ -37,15 +37,15 @@ sheet = service.spreadsheets()
 
 Sheet0 = st.secrets["Sheet0"]
 Sheet1 = st.secrets["Sheet1"]
-result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
-values_counter = result_counter.get('values',[])
-df1 = pd.DataFrame(values_counter)
-st.write(df1)
-last_row = df1.iloc[2][0]
-result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
-values = result.get('values',[])
-df0 = pd.DataFrame(values)
-st.write(df0)
+# result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+# values_counter = result_counter.get('values',[])
+# df1 = pd.DataFrame(values_counter)
+# st.write(df1)
+# last_row = df1.iloc[2][0]
+# result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
+# values = result.get('values',[])
+# df0 = pd.DataFrame(values)
+# st.write(df0)
 
 
 # df1.iloc[1][0] = int(df1.iloc[1][0])+1
