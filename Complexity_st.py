@@ -24,12 +24,12 @@ from googleapiclient.discovery import build
 from gsheetsdb import connect
 
 # Create a connection object.
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-    ],
-)
+# credentials = service_account.Credentials.from_service_account_info(
+#     st.secrets["gcp_service_account"],
+#     scopes=[
+#         "https://www.googleapis.com/auth/spreadsheets",
+#     ],
+# )
 
 # result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
 # values_counter = result_counter.get('values',[])
@@ -76,6 +76,12 @@ url = path / file
 with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
     xyArrDict = pickle.load(f)
 if 'current_test' not in st.session_state:
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+        ],
+    )
     conn = connect(credentials=credentials)
 
     service = build('sheets','v4',credentials=credentials)
@@ -88,9 +94,6 @@ if 'current_test' not in st.session_state:
     df1 = pd.DataFrame(values_counter)
     cur_test_num = int(df1.iloc[1][0])
 
-    # url2 = path / 'current_test_number.csv'
-    # cur_test_num = pd.read_csv(url2)
-    # cur_test_num = int(cur_test_num.columns[0])
     if cur_test_num>=len(problemsTot):
         cur_test_num=-1
     st.session_state['current_test'] = cur_test_num
@@ -102,9 +105,6 @@ if 'current_test' not in st.session_state:
                                    valueInputOption='USER_ENTERED', 
                                    body=dictt).execute()
 
-    # next_test_num = pd.read_csv(url2)
-    # next_test_num = next_test_num.rename(columns={f'{cur_test_num}':cur_test_num+1})
-    # next_test_num.to_csv(url2,index=False)
     cur_test_num = st.session_state['current_test']
     cur_test = problemsTot[cur_test_num,:].copy()
     shuffle(cur_test)
@@ -114,6 +114,8 @@ if 'count' not in st.session_state:
     st.session_state['count'] = 0
 elif st.session_state['count'] == len(st.session_state['current_test']):
     st.write('You have reached the end of the experiment')
+    st.write('Thank you for participating!')
+    st.stop()
 st.write(f"excercise {st.session_state['count']+1} of {len(st.session_state['current_test'])}")
 cur_test = st.session_state['current_test']
 test_id = cur_test[st.session_state['count']]
@@ -275,6 +277,12 @@ if valid_path(st.session_state['path']):
         st.session_state['count'] += 1
         st.session_state['last_point'] = []
         selected_points =[]
+        credentials = service_account.Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=[
+                "https://www.googleapis.com/auth/spreadsheets",
+            ],
+        )
         # url_results = path / 'results_streamlit.csv'
         # streamlit_csv = pd.read_csv(url_results)
         conn = connect(credentials=credentials)
@@ -328,5 +336,6 @@ if valid_path(st.session_state['path']):
         
         # streamlit_csv.to_csv(url_results,index=False)
         # st.session_state['path'] = {'x':[],'y':[]}
+        st.session_state['start_time'] = datetime.now()
         st.experimental_rerun()
 
