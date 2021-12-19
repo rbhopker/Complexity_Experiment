@@ -296,6 +296,9 @@ if valid_path(st.session_state['path']):
                                  'duration':duration.total_seconds(),
                                  'Session_id': st.session_state['session_id'],
                                  'Finish_time':st.session_state['finished'].strftime("%Y/%m/%d, %H:%M:%S")}])
+        
+        
+        
         st.session_state['path'] = {'x':[],'y':[]}
         # st.write(df_temp)
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
@@ -310,6 +313,13 @@ if valid_path(st.session_state['path']):
                                         range="results_streamlit!A1",
                                         valueInputOption='USER_ENTERED', 
                                         body=dict_write).execute()
+        df1.iloc[2][0] = int(df1.iloc[2][0])+1
+        df_as_list = df1.values.tolist()
+        dictt = {'values':df_as_list}
+        request = sheet.values().update(spreadsheetId=Sheet1,
+                                       range="current_test_number!A1",
+                                       valueInputOption='USER_ENTERED', 
+                                       body=dictt).execute()
         
         
         # streamlit_csv.to_csv(url_results,index=False)
