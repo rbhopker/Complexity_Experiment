@@ -60,7 +60,9 @@ if 'accepted' not in st.session_state:
         This is a volunteered experiment, and you are free exit. \n
         The expected time for conclusion of the experiment is 30 minutes to 60 minutes, but you may take as long as you want. \n
         The data collected and the result will be anonymized. \n
-        Please complete the experiment without interuptions."""
+        Please complete the experiment without interuptions. \n
+        Please complete the experiment only using a computer. (The experiment does not work correctly on smartphones)
+        """
     st.markdown(txt)
     agree = st.checkbox('I agree')
     if st.button(label='Continue'):
@@ -144,6 +146,7 @@ elif st.session_state['count'] == len(st.session_state['current_test']):
     st.write('You have reached the end of the experiment')
     st.write('Thank you for participating!')
     st.stop()
+st.write("Once you have a valid solution a button to advance will appear. Click on it to submit your answer.")
 st.write(f"excercise {st.session_state['count']+1} of {len(st.session_state['current_test'])}")
 cur_test = st.session_state['current_test']
 test_id = cur_test[st.session_state['count']]
