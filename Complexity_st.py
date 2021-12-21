@@ -326,7 +326,7 @@ if valid_path(st.session_state['path']):
         
         dict_write = {'values':streamlit_csv_as_list}
         # print(streamlit_csv_as_list)
-        st.markdown(streamlit_csv_as_list)
+        # st.markdown(streamlit_csv_as_list)
         request = sheet.values().update(spreadsheetId=Sheet0,
                                         range="results_streamlit!A1",
                                         valueInputOption='USER_ENTERED', 
