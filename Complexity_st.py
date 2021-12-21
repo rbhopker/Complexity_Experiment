@@ -71,8 +71,8 @@ if 'accepted' not in st.session_state:
             'Please accept before continuing the experiment'
     st.stop()
 if (st.session_state['accepted'] and 'instructions' not in st.session_state):
-    txt2 = """Travel Salesperson (TSP) Problem Instructions:
-The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position. 
+    txt2 = """Travel Salesperson (TSP) Problem Instructions: \n\n
+The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position.\n 
 You will try to solve 13 TSP problems. 
     """
     st.markdown(txt2)
