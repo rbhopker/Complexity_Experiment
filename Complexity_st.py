@@ -75,7 +75,7 @@ if (st.session_state['accepted'] and 'instructions' not in st.session_state):
 The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position. 
 You will try to solve 13 TSP problems. 
     """
-    st.markdown(txt)
+    st.markdown(txt2)
     if st.button(label='Continue'):
         st.session_state['instructions'] = True
         st.experimental_rerun()
