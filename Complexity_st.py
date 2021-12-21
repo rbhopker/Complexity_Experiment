@@ -233,6 +233,7 @@ fig.add_trace(go.Scatter(x=x, y=y,mode='markers',text=list(range(len(x))), hover
 fig.update_yaxes(visible=False, showticklabels=False)
 fig.update_xaxes(visible=False, showticklabels=False)
 
+
 for i in range(len(st.session_state['path']['x'])):
     x1 = np.linspace(st.session_state['path']['x'][i][0],st.session_state['path']['x'][i][1],10)
     y1 = np.linspace(st.session_state['path']['y'][i][0],st.session_state['path']['y'][i][1],10)
@@ -243,6 +244,10 @@ fig.update_yaxes(
     scaleanchor = "x",
     scaleratio = 1,
   )
+fig.update_layout(
+    autosize=False,
+    width=800,
+    height=800,)
 selected_points = plotly_events(fig, click_event=True, hover_event=False)
 # st.plotly_chart(fig,use_container_width=True)
 if selected_points ==[]:
