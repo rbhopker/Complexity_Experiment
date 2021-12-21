@@ -100,6 +100,7 @@ if 'accepted' not in st.session_state:
     st.stop()
 if (st.session_state['accepted'] and 'instructions' not in st.session_state):
     load_instructions()
+    st.markdown("The experiment will start in the next page.")
     if st.button(label='Continue'):
         st.session_state['instructions'] = True
         st.experimental_rerun()
