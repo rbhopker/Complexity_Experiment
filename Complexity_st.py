@@ -54,6 +54,34 @@ from gsheetsdb import connect
 if 'session_id' not in st.session_state:
     letters = string.ascii_lowercase
     st.session_state['session_id'] = ''.join(random.choice(letters) for i in range(30))
+if 'accepted' not in st.session_state:
+    txt ="""This is an experiment designed to analyze the relationship between system complexity and human effort for Ricardo Hopker’s SDM thesis at MIT under the supervision of Prof. Olivier De Weck. \n
+        By continuing here, you accept to be a part of this experiment and allow MIT and its affiliates to use the data collected for research purposes. \n
+        This is a volunteered experiment, and you are free exit. \n
+        The expected time for conclusion of the experiment is 30 minutes to 60 minutes, but you may take as long as you want. \n
+        The data collected and the result will be anonymized. \n
+        Please complete the experiment without interuptions."""
+    st.markdown(txt)
+    agree = st.checkbox('I agree')
+    if st.button(label='Continue'):
+        if agree:
+            st.session_state['accepted'] = agree
+            st.experimental_rerun()
+        else:
+            'Please accept before continuing the experiment'
+    st.stop()
+if (st.session_state['accepted'] and 'instructions' not in st.session_state):
+    txt2 = """Travel Salesperson (TSP) Problem Instructions:
+The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position. 
+You will try to solve 13 TSP problems. 
+    """
+    st.markdown(txt)
+    if st.button(label='Continue'):
+        st.session_state['instructions'] = True
+        st.experimental_rerun()
+    st.stop()
+    
+    
 @st.cache()
 def create_experiments():
     from itertools import combinations
