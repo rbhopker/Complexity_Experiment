@@ -78,6 +78,23 @@ The TSP problem is composed of several points, your task is to try to find the s
 You will try to solve 13 TSP problems. 
     """
     st.markdown(txt2)
+    st.markdown("Below you can find an exemple of a problem:")
+    from PIL import Image
+    st.markdown("Below you can find an exemple of a problem:")
+    image = Image.open('example_empty.jpg')
+    st.image(image, caption='Example problem')
+    
+    st.markdown("Below you can find an exemple of a problem solved with the shortest path possible:")
+    image = Image.open('example_optimal.jpg')
+    st.image(image, caption='Example problem optimally solved')
+    
+    st.markdown("Below you can find an exemple of a problem solved without the shortest path possible, but still a valid solution")
+    image = Image.open('example_valid.jpg')
+    st.image(image, caption='Example problem solved, with valid solution')
+    
+    st.markdown("Below you can find an exemple of a problem solved without a valid solution")
+    image = Image.open('example_valid.jpg')
+    st.image(image, caption='Example problem invalid solution. (A point was not visited)ß')
     if st.button(label='Continue'):
         st.session_state['instructions'] = True
         st.experimental_rerun()
