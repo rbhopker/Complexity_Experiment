@@ -46,6 +46,8 @@ You will try to solve 13 TSP problems.
     st.markdown("Below you can find an exemple of a problem solved without a valid solution")
     image = Image.open('example_invalid.png')
     st.image(image, caption='Example problem invalid solution. (A point was not visited)')
+    st.markdown("To create a link between two points, click on a point and then on the next.")
+    st.markdown("To delete a link between two points, click on the line.")
     
 # Create a connection object.
 # credentials = service_account.Credentials.from_service_account_info(
