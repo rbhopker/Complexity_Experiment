@@ -239,10 +239,10 @@ for i in range(len(st.session_state['path']['x'])):
     y1 = np.linspace(st.session_state['path']['y'][i][0],st.session_state['path']['y'][i][1],10)
     fig.add_trace(go.Scatter(x=x1, y=y1, mode="lines",marker_color='rgba(255, 0, 0, 1)',text=list(range(len(x1))), hovertemplate='path (click to erase)'))
 fig.update_layout(showlegend=False)
-fig.update_layout(
-    autosize=False,
-    width=200,
-    height=200,)
+# fig.update_layout(
+#     autosize=False,
+#     width=200,
+#     height=200,)
 fig.update_layout(xaxis_fixedrange=True, yaxis_fixedrange=True)
 fig.update_yaxes(
     scaleanchor = "x",
