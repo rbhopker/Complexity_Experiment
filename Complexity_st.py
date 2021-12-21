@@ -23,7 +23,6 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from gsheetsdb import connect
 
-@st.cache()
 def load_instructions():
     txt2 = """Travel Salesperson (TSP) Problem Instructions: \n\n
 The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position.\n 
