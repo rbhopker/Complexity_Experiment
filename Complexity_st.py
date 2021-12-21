@@ -23,6 +23,31 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from gsheetsdb import connect
 
+@st.cache()
+def load_instructions():
+    txt2 = """Travel Salesperson (TSP) Problem Instructions: \n\n
+The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position.\n 
+You will try to solve 13 TSP problems. 
+    """
+    st.markdown(txt2)
+
+    from PIL import Image
+    st.markdown("Below you can find an exemple of a problem:")
+    image = Image.open('example_empty.jpg')
+    st.image(image, caption='Example problem')
+    
+    st.markdown("Below you can find an exemple of a problem solved with the shortest path possible:")
+    image = Image.open('example_optimal.jpg')
+    st.image(image, caption='Example problem optimally solved')
+    
+    st.markdown("Below you can find an exemple of a problem solved without the shortest path possible, but still a valid solution")
+    image = Image.open('example_valid.jpg')
+    st.image(image, caption='Example problem solved, with valid solution')
+    
+    st.markdown("Below you can find an exemple of a problem solved without a valid solution")
+    image = Image.open('example_invalid.png')
+    st.image(image, caption='Example problem invalid solution. (A point was not visited)')
+    
 # Create a connection object.
 # credentials = service_account.Credentials.from_service_account_info(
 #     st.secrets["gcp_service_account"],
@@ -73,28 +98,7 @@ if 'accepted' not in st.session_state:
             'Please accept before continuing the experiment'
     st.stop()
 if (st.session_state['accepted'] and 'instructions' not in st.session_state):
-    txt2 = """Travel Salesperson (TSP) Problem Instructions: \n\n
-The TSP problem is composed of several points, your task is to try to find the shortest path that links all points, with straight lines, while going to each point once and only once and returning to the starting position.\n 
-You will try to solve 13 TSP problems. 
-    """
-    st.markdown(txt2)
-
-    from PIL import Image
-    st.markdown("Below you can find an exemple of a problem:")
-    image = Image.open('example_empty.jpg')
-    st.image(image, caption='Example problem')
-    
-    st.markdown("Below you can find an exemple of a problem solved with the shortest path possible:")
-    image = Image.open('example_optimal.jpg')
-    st.image(image, caption='Example problem optimally solved')
-    
-    st.markdown("Below you can find an exemple of a problem solved without the shortest path possible, but still a valid solution")
-    image = Image.open('example_valid.jpg')
-    st.image(image, caption='Example problem solved, with valid solution')
-    
-    st.markdown("Below you can find an exemple of a problem solved without a valid solution")
-    image = Image.open('example_invalid.png')
-    st.image(image, caption='Example problem invalid solution. (A point was not visited)')
+    load_instructions()
     if st.button(label='Continue'):
         st.session_state['instructions'] = True
         st.experimental_rerun()
@@ -392,4 +396,6 @@ if valid_path(st.session_state['path']):
         # st.session_state['path'] = {'x':[],'y':[]}
         st.session_state['start_time'] = datetime.now()
         st.experimental_rerun()
+if st.button(label='View instructions'):
+    load_instructions()
 
