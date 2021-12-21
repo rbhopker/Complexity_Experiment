@@ -93,7 +93,7 @@ You will try to solve 13 TSP problems.
     st.image(image, caption='Example problem solved, with valid solution')
     
     st.markdown("Below you can find an exemple of a problem solved without a valid solution")
-    image = Image.open('example_invalid.jpg')
+    image = Image.open('example_invalid.png')
     st.image(image, caption='Example problem invalid solution. (A point was not visited)')
     if st.button(label='Continue'):
         st.session_state['instructions'] = True
