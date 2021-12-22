@@ -152,8 +152,7 @@ def update_db(df):
 #                                body=dictt).execute()
 
 
-if 'session_id' not in st.session_state:
-    letters = string.ascii_lowercase
+
     st.session_state['session_id'] = ''.join(random.choice(letters) for i in range(30))
 if 'accepted' not in st.session_state:
     txt ="""This is an experiment designed to analyze the relationship between system complexity and human effort for Ricardo Hopker’s SDM thesis at MIT under the supervision of Prof. Olivier De Weck. \n
@@ -181,7 +180,8 @@ if (st.session_state['accepted'] and 'instructions' not in st.session_state):
         st.experimental_rerun()
     st.stop()
     
-    
+if 'session_id' not in st.session_state:
+    letters = string.ascii_lowercase    
 @st.cache()
 def create_experiments():
     from itertools import combinations
@@ -197,12 +197,17 @@ def create_experiments():
     problemsTot = np.concatenate([problems.T,problems2.T],axis=1).T
     return problemsTot
 problemsTot=create_experiments()
-path = pathlib.Path(__file__).parents[0]
-# path = r"/Users/ricardobortothopker/OneDrive - Massachusetts Institute of Technology/Classes/Thesis/excels/Points for TSP/"
-file = r"TSP Problems3.pkl"
-url = path / file
-with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
-    xyArrDict = pickle.load(f)
+@st.cache()
+def load_xy_dict():
+    
+    path = pathlib.Path(__file__).parents[0]
+    # path = r"/Users/ricardobortothopker/OneDrive - Massachusetts Institute of Technology/Classes/Thesis/excels/Points for TSP/"
+    file = r"TSP Problems3.pkl"
+    url = path / file
+    with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
+        xyArrDict = pickle.load(f)
+    return xyArrDict
+xyArrDict = load_xy_dict()
 if 'current_test' not in st.session_state:
     # credentials = service_account.Credentials.from_service_account_info(
     #     st.secrets["gcp_service_account"],
@@ -357,8 +362,8 @@ else:
             st.experimental_rerun()
         # print(f"after {st.session_state['path']}")
         
-if 'start_time' not in st.session_state:
-    st.session_state['start_time'] = datetime.now()
+# if 'start_time' not in st.session_state:
+st.session_state['start_time'] = datetime.now()
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=x, y=y,mode='markers',text=list(range(len(x))), hovertemplate='point number:%{text}'))
 fig.update_yaxes(visible=False, showticklabels=False)
