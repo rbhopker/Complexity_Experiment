@@ -153,7 +153,7 @@ def update_db(df):
 
 
 
-    st.session_state['session_id'] = ''.join(random.choice(letters) for i in range(30))
+
 if 'accepted' not in st.session_state:
     txt ="""This is an experiment designed to analyze the relationship between system complexity and human effort for Ricardo Hopker’s SDM thesis at MIT under the supervision of Prof. Olivier De Weck. \n
         By continuing here, you accept to be a part of this experiment and allow MIT and its affiliates to use the data collected for research purposes. \n
@@ -247,6 +247,7 @@ if 'current_test' not in st.session_state:
 
 if 'count' not in st.session_state:
     st.session_state['count'] = 0
+    st.session_state['session_id'] = ''.join(random.choice(letters) for i in range(30))
 elif st.session_state['count'] == len(st.session_state['current_test']):
     st.write('You have reached the end of the experiment')
     st.write('Thank you for participating!')
