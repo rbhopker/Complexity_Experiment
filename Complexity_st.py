@@ -362,8 +362,8 @@ else:
             st.experimental_rerun()
         # print(f"after {st.session_state['path']}")
         
-# if 'start_time' not in st.session_state:
-st.session_state['start_time'] = datetime.now()
+if 'start_time' not in st.session_state:
+    st.session_state['start_time'] = datetime.now()
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=x, y=y,mode='markers',text=list(range(len(x))), hovertemplate='point number:%{text}'))
 fig.update_yaxes(visible=False, showticklabels=False)
@@ -484,6 +484,7 @@ if valid_path(st.session_state['path']):
         # streamlit_csv.to_csv(url_results,index=False)
         # st.session_state['path'] = {'x':[],'y':[]}
         st.session_state['start_time'] = datetime.now()
+        del st.session_state['start_time']
         st.experimental_rerun()
 if st.button(label='View instructions'):
     load_instructions()
