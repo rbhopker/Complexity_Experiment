@@ -253,6 +253,7 @@ elif st.session_state['count'] == len(st.session_state['current_test']):
     st.write('Thank you for participating!')
     st.stop()
 st.write("Once you have a valid solution a button to advance will appear. Click on it to submit your answer.")
+st.write("The goal is to find the smallest total lenght of the red lines.")
 st.write(f"excercise {st.session_state['count']+1} of {len(st.session_state['current_test'])}")
 cur_test = st.session_state['current_test']
 test_id = cur_test[st.session_state['count']]
@@ -387,6 +388,7 @@ fig.update_yaxes(
   )
 
 selected_points = plotly_events(fig, click_event=True, hover_event=False)
+st.write("If you have any questions, please contact Ricardo Hopker through rbhopker@mit.edu")
 # st.plotly_chart(fig,use_container_width=True)
 if selected_points ==[]:
     selected_point = []
