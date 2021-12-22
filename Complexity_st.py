@@ -31,23 +31,98 @@ You will try to solve 13 TSP problems.
     st.markdown(txt2)
 
     from PIL import Image
-    st.markdown("Below you can find an exemple of a problem:")
+    st.markdown("Below you can find an example of a problem:")
     image = Image.open('example_empty.jpg')
     st.image(image, caption='Example problem')
     
-    st.markdown("Below you can find an exemple of a problem solved with the shortest path possible:")
+    st.markdown("Below you can find an example of a problem solved with the shortest path possible:")
     image = Image.open('example_optimal.jpg')
     st.image(image, caption='Example problem optimally solved')
     
-    st.markdown("Below you can find an exemple of a problem solved without the shortest path possible, but still a valid solution")
+    st.markdown("Below you can find an example of a problem solved without the shortest path possible, but still a valid solution")
     image = Image.open('example_valid.jpg')
     st.image(image, caption='Example problem solved, with valid solution')
     
-    st.markdown("Below you can find an exemple of a problem solved without a valid solution")
+    st.markdown("Below you can find an example of a problem solved without a valid solution")
     image = Image.open('example_invalid.png')
     st.image(image, caption='Example problem invalid solution. (A point was not visited)')
     st.markdown("To create a link between two points, click on a point and then on the next.")
     st.markdown("To delete a link between two points, click on the line.")
+def query_counter():
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+        ],
+    )
+    conn = connect(credentials=credentials)
+
+    service = build('sheets','v4',credentials=credentials)
+    sheet = service.spreadsheets()
+
+    Sheet0 = st.secrets["Sheet0"]
+    Sheet1 = st.secrets["Sheet1"]
+    result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+    values_counter = result_counter.get('values',[])
+    df1 = pd.DataFrame(values_counter)
+    return df1
+def update_counter(df):
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+        ],
+    )
+    conn = connect(credentials=credentials)
+
+    service = build('sheets','v4',credentials=credentials)
+    sheet = service.spreadsheets()
+
+    Sheet1 = st.secrets["Sheet1"]
+    df_as_list = df.values.tolist()
+    dictt = {'values':df_as_list}
+    request = sheet.values().update(spreadsheetId=Sheet1,
+                                   range="current_test_number!A1",
+                                   valueInputOption='USER_ENTERED', 
+                                   body=dictt).execute()
+def query_db(last_row):
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+        ],
+    )
+    conn = connect(credentials=credentials)
+
+    service = build('sheets','v4',credentials=credentials)
+    sheet = service.spreadsheets()
+
+    Sheet0 = st.secrets["Sheet0"]
+    result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
+    values = result.get('values',[])
+    df = pd.DataFrame(values[1:],columns=values[0])
+    return df
+def update_db(df):
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+        ],
+    )
+    conn = connect(credentials=credentials)
+
+    service = build('sheets','v4',credentials=credentials)
+    sheet = service.spreadsheets()
+
+    Sheet0 = st.secrets["Sheet0"]
+    streamlit_csv_as_list = df.values.tolist()
+    streamlit_csv_as_list.insert(0,df.columns.tolist())
+    
+    dict_write = {'values':streamlit_csv_as_list}
+    request = sheet.values().update(spreadsheetId=Sheet0,
+                                    range="results_streamlit!A1",
+                                    valueInputOption='USER_ENTERED', 
+                                    body=dict_write).execute()
     
 # Create a connection object.
 # credentials = service_account.Credentials.from_service_account_info(
@@ -129,34 +204,36 @@ url = path / file
 with open(url,'rb') as f:  # Python 3: open(..., 'rb')\n",
     xyArrDict = pickle.load(f)
 if 'current_test' not in st.session_state:
-    credentials = service_account.Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
-        scopes=[
-            "https://www.googleapis.com/auth/spreadsheets",
-        ],
-    )
-    conn = connect(credentials=credentials)
+    # credentials = service_account.Credentials.from_service_account_info(
+    #     st.secrets["gcp_service_account"],
+    #     scopes=[
+    #         "https://www.googleapis.com/auth/spreadsheets",
+    #     ],
+    # )
+    # conn = connect(credentials=credentials)
 
-    service = build('sheets','v4',credentials=credentials)
-    sheet = service.spreadsheets()
+    # service = build('sheets','v4',credentials=credentials)
+    # sheet = service.spreadsheets()
 
-    Sheet0 = st.secrets["Sheet0"]
-    Sheet1 = st.secrets["Sheet1"]
-    result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
-    values_counter = result_counter.get('values',[])
-    df1 = pd.DataFrame(values_counter)
+    # Sheet0 = st.secrets["Sheet0"]
+    # Sheet1 = st.secrets["Sheet1"]
+    # result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+    # values_counter = result_counter.get('values',[])
+    # df1 = pd.DataFrame(values_counter)
+    df1 = query_counter()
     cur_test_num = int(df1.iloc[1][0])
 
     if cur_test_num>=len(problemsTot):
         cur_test_num=-1
+    df1.iloc[1][0] = cur_test_num+1
     st.session_state['current_test'] = cur_test_num
-    df1.iloc[1][0] = int(df1.iloc[1][0])+1
-    df_as_list = df1.values.tolist()
-    dictt = {'values':df_as_list}
-    request = sheet.values().update(spreadsheetId=Sheet1,
-                                   range="current_test_number!A1",
-                                   valueInputOption='USER_ENTERED', 
-                                   body=dictt).execute()
+    update_counter(df1)
+    # df_as_list = df1.values.tolist()
+    # dictt = {'values':df_as_list}
+    # request = sheet.values().update(spreadsheetId=Sheet1,
+    #                                range="current_test_number!A1",
+    #                                valueInputOption='USER_ENTERED', 
+    #                                body=dictt).execute()
 
     cur_test_num = st.session_state['current_test']
     cur_test = problemsTot[cur_test_num,:].copy()
@@ -337,29 +414,32 @@ if valid_path(st.session_state['path']):
         st.session_state['count'] += 1
         st.session_state['last_point'] = []
         selected_points =[]
-        credentials = service_account.Credentials.from_service_account_info(
-            st.secrets["gcp_service_account"],
-            scopes=[
-                "https://www.googleapis.com/auth/spreadsheets",
-            ],
-        )
-        # url_results = path / 'results_streamlit.csv'
-        # streamlit_csv = pd.read_csv(url_results)
-        conn = connect(credentials=credentials)
+        # credentials = service_account.Credentials.from_service_account_info(
+        #     st.secrets["gcp_service_account"],
+        #     scopes=[
+        #         "https://www.googleapis.com/auth/spreadsheets",
+        #     ],
+        # )
+        # # url_results = path / 'results_streamlit.csv'
+        # # streamlit_csv = pd.read_csv(url_results)
+        # conn = connect(credentials=credentials)
 
-        service = build('sheets','v4',credentials=credentials)
-        sheet = service.spreadsheets()
+        # service = build('sheets','v4',credentials=credentials)
+        # sheet = service.spreadsheets()
 
-        Sheet0 = st.secrets["Sheet0"]
-        Sheet1 = st.secrets["Sheet1"]
-        result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
-        values_counter = result_counter.get('values',[])
-        df1 = pd.DataFrame(values_counter)
+        # Sheet0 = st.secrets["Sheet0"]
+        # Sheet1 = st.secrets["Sheet1"]
+        # result_counter = sheet.values().get(spreadsheetId=Sheet1,range="current_test_number!A1:A3").execute()
+        # values_counter = result_counter.get('values',[])
+        # df1 = pd.DataFrame(values_counter)
+        df1 = query_counter()
         # st.write(df1)
         last_row = df1.iloc[2][0]
-        result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
-        values = result.get('values',[])
-        streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
+        
+        # result = sheet.values().get(spreadsheetId=Sheet0,range=f"results_streamlit!A1:E{last_row}").execute()
+        # values = result.get('values',[])
+        # streamlit_csv = pd.DataFrame(values[1:],columns=values[0])
+        streamlit_csv = query_db(last_row)
         # st.write(streamlit_csv)
         duration = st.session_state['finished'] - st.session_state['start_time']
         
@@ -375,23 +455,25 @@ if valid_path(st.session_state['path']):
         # st.write(df_temp)
         streamlit_csv = pd.concat([streamlit_csv,df_temp])
         # st.write(streamlit_csv)
-        streamlit_csv_as_list = streamlit_csv.values.tolist()
-        streamlit_csv_as_list.insert(0,streamlit_csv.columns.tolist())
+        # streamlit_csv_as_list = streamlit_csv.values.tolist()
+        # streamlit_csv_as_list.insert(0,streamlit_csv.columns.tolist())
         
-        dict_write = {'values':streamlit_csv_as_list}
-        # print(streamlit_csv_as_list)
-        # st.markdown(streamlit_csv_as_list)
-        request = sheet.values().update(spreadsheetId=Sheet0,
-                                        range="results_streamlit!A1",
-                                        valueInputOption='USER_ENTERED', 
-                                        body=dict_write).execute()
+        # dict_write = {'values':streamlit_csv_as_list}
+        # # print(streamlit_csv_as_list)
+        # # st.markdown(streamlit_csv_as_list)
+        # request = sheet.values().update(spreadsheetId=Sheet0,
+        #                                 range="results_streamlit!A1",
+        #                                 valueInputOption='USER_ENTERED', 
+        #                                 body=dict_write).execute()
+        update_db(streamlit_csv)
         df1.iloc[2][0] = int(df1.iloc[2][0])+1
-        df_as_list = df1.values.tolist()
-        dictt = {'values':df_as_list}
-        request = sheet.values().update(spreadsheetId=Sheet1,
-                                       range="current_test_number!A1",
-                                       valueInputOption='USER_ENTERED', 
-                                       body=dictt).execute()
+        update_counter(df1)
+        # df_as_list = df1.values.tolist()
+        # dictt = {'values':df_as_list}
+        # request = sheet.values().update(spreadsheetId=Sheet1,
+        #                                range="current_test_number!A1",
+        #                                valueInputOption='USER_ENTERED', 
+        #                                body=dictt).execute()
         
         
         # streamlit_csv.to_csv(url_results,index=False)
