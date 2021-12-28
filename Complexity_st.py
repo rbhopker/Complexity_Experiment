@@ -489,6 +489,7 @@ if valid_path(st.session_state['path']):
         st.session_state['start_time'] = datetime.now()
         del st.session_state['start_time']
         st.experimental_rerun()
-if st.button(label='View instructions'):
+# if st.button(label='View instructions'):
+with st.expander('View instructions')
     load_instructions()
 
